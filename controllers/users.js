@@ -1,8 +1,11 @@
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-error');
+const Conflict = require('../errors/conflict-error');
+const { NODE_ENV, JWT_SECRET } = require('../app');
 
 const getCurrentUser = (req, res, next) => {
   const id = req.user._id;
@@ -59,7 +62,7 @@ const login = (req, res, next) => {
 };
 
 const signup = (req, res, next) => {
-  const { name, about, avatar } = req.body;
+  const { name } = req.body;
   if (!req.body.password) {
     throw new BadRequestError('Пароль не может быть пустым');
   }
@@ -70,8 +73,6 @@ const signup = (req, res, next) => {
         email: req.body.email,
         password: hash,
         name,
-        about,
-        avatar,
       }),
     )
     .then((user) => res.status(201).send({ data: user }))
