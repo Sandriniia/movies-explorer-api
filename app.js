@@ -8,8 +8,10 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports = { NODE_ENV, JWT_SECRET };
 
 const router = require('./routes');
+const { login, signup } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
+const { validateLogin, validateSignup } = require('./middlewares/validations');
 
 const { PORT = 3000 } = process.env;
 
@@ -22,6 +24,9 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+app.post('/signin', validateLogin, login);
+app.post('/signup', validateSignup, signup);
 
 app.use(auth);
 

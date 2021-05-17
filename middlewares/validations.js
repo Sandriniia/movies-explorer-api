@@ -112,9 +112,57 @@ const validateDeleteMovie = celebrate({
     .unknown(),
 });
 
+const validateLogin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string()
+      .required()
+      .email()
+      .custom((value, helpers) => {
+        if (validator.isEmail(value)) {
+          return value;
+        }
+        return helpers.message('Поле "email" должно быть валидным');
+      })
+      .messages({
+        'any.required': 'Поле должно быть заполнено',
+      }),
+    password: Joi.string().required().min(8).messages({
+      'any.required': 'Поле должно быть заполнено',
+    }),
+  }),
+  headers: Joi.object()
+    .keys({
+      'content-type': Joi.string().valid('application/json').required(),
+    })
+    .unknown(),
+});
+
+const validateSignup = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email().messages({
+      'any.required': 'Поле должно быть заполнено',
+    }),
+    password: Joi.string().required().min(8).messages({
+      'any.required': 'Поле должно быть заполнено',
+    }),
+    name: Joi.string().min(2).max(30).messages({
+      'string.min': 'Минимальная длина поля "name" - 2',
+      'string.max': 'Максимальная длина поля "name" - 30',
+      'string.required': 'Введите имя',
+    }),
+  }),
+  headers: Joi.object()
+    .keys({
+      'content-type': Joi.string().valid('application/json').required(),
+    })
+    .unknown(),
+});
+
 module.exports = {
   validateGetCurrentUser,
   validateUpdateUser,
   validateCreateMovie,
   validateDeleteMovie,
+  validateLogin,
+  validateSignup,
 };

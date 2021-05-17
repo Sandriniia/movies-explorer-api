@@ -43,7 +43,52 @@ const updateUser = (req, res, next) => {
     });
 };
 
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch(next);
+};
+
+const signup = (req, res, next) => {
+  const { name, about, avatar } = req.body;
+  if (!req.body.password) {
+    throw new BadRequestError('Пароль не может быть пустым');
+  }
+  bcrypt
+    .hash(req.body.password, 10)
+    .then((hash) =>
+      User.create({
+        email: req.body.email,
+        password: hash,
+        name,
+        about,
+        avatar,
+      }),
+    )
+    .then((user) => res.status(201).send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+      } else if (err.name === 'MongoError' && err.code === 11000) {
+        next(new Conflict('Пользователь с таким email уже существует'));
+      } else {
+        next(err);
+      }
+    });
+};
+
 module.exports = {
   getCurrentUser,
   updateUser,
+  login,
+  signup,
 };
