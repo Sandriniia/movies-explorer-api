@@ -1,0 +1,28 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sandriniia/movies-explorer-api.git"
+  },
+  "author": "Sandriniia Grebentcova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sandriniia/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/Sandriniia/movies-explorer-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
