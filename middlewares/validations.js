@@ -29,6 +29,14 @@ const validateUpdateUser = celebrate({
     .unknown(),
 });
 
+const validateGetMovies = celebrate({
+  headers: Joi.object()
+    .keys({
+      authorization: Joi.string().max(200).required(),
+    })
+    .unknown(),
+});
+
 const validateCreateMovie = celebrate({
   body: Joi.object().keys({
     country: Joi.string().required().messages({
@@ -161,6 +169,7 @@ const validateSignup = celebrate({
 module.exports = {
   validateGetCurrentUser,
   validateUpdateUser,
+  validateGetMovies,
   validateCreateMovie,
   validateDeleteMovie,
   validateLogin,
