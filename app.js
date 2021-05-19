@@ -9,11 +9,10 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports = { NODE_ENV, JWT_SECRET };
 
 const router = require('./routes');
-const { login, signup } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { validateLogin, validateSignup } = require('./middlewares/validations');
+const { router_signin, router_signup } = require('./routes/signin_signup');
 
 const { PORT = 3000 } = process.env;
 
@@ -28,8 +27,8 @@ app.use(cors());
 app.use(requestLogger);
 app.use(bodyParser.json());
 
-app.post('/signin', validateLogin, login);
-app.post('/signup', validateSignup, signup);
+app.use(router_signin);
+app.use(router_signup);
 
 app.use(auth);
 
