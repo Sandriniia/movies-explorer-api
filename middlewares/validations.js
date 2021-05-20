@@ -2,14 +2,6 @@ const { celebrate, Joi } = require('celebrate');
 const { ObjectId } = require('mongoose').Types;
 const validator = require('validator');
 
-const validateGetCurrentUser = celebrate({
-  headers: Joi.object()
-    .keys({
-      authorization: Joi.string().max(200).required(),
-    })
-    .unknown(),
-});
-
 const validateUpdateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30)
@@ -25,15 +17,6 @@ const validateUpdateUser = celebrate({
   headers: Joi.object()
     .keys({
       'content-type': Joi.string().valid('application/json').required(),
-      authorization: Joi.string().max(200).required(),
-    })
-    .unknown(),
-});
-
-const validateGetMovies = celebrate({
-  headers: Joi.object()
-    .keys({
-      authorization: Joi.string().max(200).required(),
     })
     .unknown(),
 });
@@ -55,7 +38,7 @@ const validateCreateMovie = celebrate({
     description: Joi.string().required().messages({
       'string.required': 'Поле должно быть заполнено',
     }),
-    image: Joi.string()
+    image: Joi.string().required()
       .custom((value, helpers) => {
         if (validator.isURL(value, { disallow_auth: true, require_protocol: true })) {
           return value;
@@ -65,7 +48,7 @@ const validateCreateMovie = celebrate({
       .messages({
         'any.required': 'Поле должно быть заполнено',
       }),
-    trailer: Joi.string()
+    trailer: Joi.string().required()
       .custom((value, helpers) => {
         if (validator.isURL(value, { disallow_auth: true, require_protocol: true })) {
           return value;
@@ -75,7 +58,7 @@ const validateCreateMovie = celebrate({
       .messages({
         'any.required': 'Поле должно быть заполнено',
       }),
-    thumbnail: Joi.string()
+    thumbnail: Joi.string().required()
       .custom((value, helpers) => {
         if (validator.isURL(value, { disallow_auth: true, require_protocol: true })) {
           return value;
@@ -98,7 +81,6 @@ const validateCreateMovie = celebrate({
   headers: Joi.object()
     .keys({
       'content-type': Joi.string().valid('application/json').required(),
-      authorization: Joi.string().max(200).required(),
     })
     .unknown(),
 });
@@ -115,9 +97,6 @@ const validateDeleteMovie = celebrate({
       }),
   }),
   headers: Joi.object()
-    .keys({
-      authorization: Joi.string().max(200).required(),
-    })
     .unknown(),
 });
 
@@ -154,11 +133,12 @@ const validateSignup = celebrate({
     password: Joi.string().required().min(8).messages({
       'any.required': 'Поле должно быть заполнено',
     }),
-    name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимальная длина поля "name" - 2',
-      'string.max': 'Максимальная длина поля "name" - 30',
-      'string.required': 'Введите имя',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'string.required': 'Введите имя',
+      }),
   }),
   headers: Joi.object()
     .keys({
@@ -168,9 +148,7 @@ const validateSignup = celebrate({
 });
 
 module.exports = {
-  validateGetCurrentUser,
   validateUpdateUser,
-  validateGetMovies,
   validateCreateMovie,
   validateDeleteMovie,
   validateLogin,
