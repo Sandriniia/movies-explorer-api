@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cors = require('cors');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET, PORT = 3000 } = process.env;
 module.exports = { NODE_ENV, JWT_SECRET };
 
 const router = require('./routes');
@@ -13,8 +13,6 @@ const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error-handler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { router_signin, router_signup } = require('./routes/signin_signup');
-
-const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
