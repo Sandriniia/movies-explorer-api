@@ -53,17 +53,15 @@ const deleteMovie = (req, res, next) => {
   const { id } = req.params;
   const owner = req.user._id;
   Movie.findById(id)
-    .then((movie) => {
+    .then(async (movie) => {
       if (movie === null) {
         throw new NotFoundError('Фильм с указанным _id не найден');
       }
       if (movie.owner.equals(owner)) {
-        Movie.findByIdAndRemove(id).then(() => {
-          res.send(movie);
-        });
-      } else {
-        next(new Forbidden('Вы не можете удалять чужие фильмы'));
+        await movie.remove();
+        res.send({ message: 'Фильм удален' });
       }
+      next(new Forbidden('Вы не можете удалять чужие фильмы'));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
