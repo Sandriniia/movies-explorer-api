@@ -12,11 +12,12 @@ const validateGetCurrentUser = celebrate({
 
 const validateUpdateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30).messages({
-      'string.min': 'Минимальная длина поля "name" - 2',
-      'string.max': 'Максимальная длина поля "name" - 30',
-      'string.required': 'Введите имя',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'string.required': 'Введите имя',
+      }),
     email: Joi.string().required().email().messages({
       'any.required': 'Поле должно быть заполнено',
     }),

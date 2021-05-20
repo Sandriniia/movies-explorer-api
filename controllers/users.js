@@ -40,6 +40,8 @@ const updateUser = (req, res, next) => {
         next(new BadRequestError('Переданы данные в неверном формате'));
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Введены неверные данные'));
+      } else if (err.name === 'MongoError' && err.code === 11000) {
+        next(new Conflict('Пользователь с таким email уже существует'));
       } else {
         next(err);
       }
@@ -68,13 +70,11 @@ const signup = (req, res, next) => {
   }
   bcrypt
     .hash(req.body.password, 10)
-    .then((hash) =>
-      User.create({
-        email: req.body.email,
-        password: hash,
-        name,
-      }),
-    )
+    .then((hash) => User.create({
+      email: req.body.email,
+      password: hash,
+      name,
+    }))
     .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
