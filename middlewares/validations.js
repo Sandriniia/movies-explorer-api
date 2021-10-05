@@ -74,9 +74,7 @@ const validateCreateMovie = celebrate({
       'number.required': 'Поле должно быть заполнено',
     }),
     nameRU: Joi.string().required(),
-    nameEN: Joi.string()
-      .required()
-      .pattern(/^[a-zA-Z0-9\s]+$/),
+    nameEN: Joi.string().required(),
   }),
   headers: Joi.object()
     .keys({
