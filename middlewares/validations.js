@@ -4,12 +4,11 @@ const validator = require('validator');
 
 const validateUpdateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30)
-      .messages({
-        'string.min': 'Минимальная длина поля "name" - 2',
-        'string.max': 'Максимальная длина поля "name" - 30',
-        'string.required': 'Введите имя',
-      }),
+    name: Joi.string().required().min(2).max(30).messages({
+      'string.min': 'Минимальная длина поля "name" - 2',
+      'string.max': 'Максимальная длина поля "name" - 30',
+      'string.required': 'Введите имя',
+    }),
     email: Joi.string().required().email().messages({
       'any.required': 'Поле должно быть заполнено',
     }),
@@ -38,7 +37,8 @@ const validateCreateMovie = celebrate({
     description: Joi.string().required().messages({
       'string.required': 'Поле должно быть заполнено',
     }),
-    image: Joi.string().required()
+    image: Joi.string()
+      .required()
       .custom((value, helpers) => {
         if (validator.isURL(value, { disallow_auth: true, require_protocol: true })) {
           return value;
@@ -48,7 +48,8 @@ const validateCreateMovie = celebrate({
       .messages({
         'any.required': 'Поле должно быть заполнено',
       }),
-    trailer: Joi.string().required()
+    trailer: Joi.string()
+      .required()
       .custom((value, helpers) => {
         if (validator.isURL(value, { disallow_auth: true, require_protocol: true })) {
           return value;
@@ -58,7 +59,8 @@ const validateCreateMovie = celebrate({
       .messages({
         'any.required': 'Поле должно быть заполнено',
       }),
-    thumbnail: Joi.string().required()
+    thumbnail: Joi.string()
+      .required()
       .custom((value, helpers) => {
         if (validator.isURL(value, { disallow_auth: true, require_protocol: true })) {
           return value;
@@ -71,9 +73,7 @@ const validateCreateMovie = celebrate({
     movieId: Joi.number().required().messages({
       'number.required': 'Поле должно быть заполнено',
     }),
-    nameRU: Joi.string()
-      .required()
-      .pattern(/^[а-яА-ЯЁё0-9\s]+$/),
+    nameRU: Joi.string().required(),
     nameEN: Joi.string()
       .required()
       .pattern(/^[a-zA-Z0-9\s]+$/),
@@ -96,8 +96,7 @@ const validateDeleteMovie = celebrate({
         return helpers.message('Невалидный id пользователя');
       }),
   }),
-  headers: Joi.object()
-    .unknown(),
+  headers: Joi.object().unknown(),
 });
 
 const validateLogin = celebrate({
@@ -133,12 +132,11 @@ const validateSignup = celebrate({
     password: Joi.string().required().min(8).messages({
       'any.required': 'Поле должно быть заполнено',
     }),
-    name: Joi.string().required().min(2).max(30)
-      .messages({
-        'string.min': 'Минимальная длина поля "name" - 2',
-        'string.max': 'Максимальная длина поля "name" - 30',
-        'string.required': 'Введите имя',
-      }),
+    name: Joi.string().required().min(2).max(30).messages({
+      'string.min': 'Минимальная длина поля "name" - 2',
+      'string.max': 'Максимальная длина поля "name" - 30',
+      'string.required': 'Введите имя',
+    }),
   }),
   headers: Joi.object()
     .keys({
